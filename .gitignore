@@ -19,3 +19,11 @@
 
 # Go workspace file
 go.work
+
+### MacOS ###
+*.DS_Store
+
+### Project ###
+.idea/
+.vscode/
+.env
