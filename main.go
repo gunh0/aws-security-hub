@@ -3,17 +3,17 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gin-gonic/gin"
+	docs "github.com/gunh0/aws-security-hub/docs"
+	utils "github.com/gunh0/aws-security-hub/utils"
 	"github.com/joho/godotenv"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/swag/example/basic/docs"
 )
 
 func main() {
@@ -55,18 +55,14 @@ func main() {
 	}
 
 	r := gin.Default()
-	docs.SwaggerInfo.BasePath = "/api/docs"
 
 	serverUtils := r.Group("/srv")
 	{
-		// serverUtils.GET("/health", utils.healthCheckHandler)
-		serverUtils.GET("/hello", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "World!",
-			})
-		})
+		serverUtils.GET("/hello", utils.HealthCheckHandler)
 	}
 
+	docs.SwaggerInfo.Title = "AWS Security Hub Utils"
+	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.Run(":8080")
 }

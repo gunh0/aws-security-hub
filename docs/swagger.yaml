@@ -1,4 +1,17 @@
 info:
   contact: {}
-paths: {}
+paths:
+  /srv/hello:
+    get:
+      consumes:
+      - application/json
+      description: Server Health Check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Health Check
+      tags:
+      - Server Utils
 swagger: "2.0"

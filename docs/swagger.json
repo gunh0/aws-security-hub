@@ -3,5 +3,26 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/srv/hello": {
+            "get": {
+                "description": "Server Health Check",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Server Utils"
+                ],
+                "summary": "Health Check",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
 }
