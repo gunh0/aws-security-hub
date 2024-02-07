@@ -15,6 +15,23 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/ecs/ecs-task-definition-user-for-host-mode-check": {
+            "get": {
+                "description": "Checks for secure networking modes and user definitions in ECS task definitions.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ECS"
+                ],
+                "summary": "Checks for secure networking modes and user definitions in ECS task definitions.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/srv/hello": {
             "get": {
                 "description": "Server Health Check",
