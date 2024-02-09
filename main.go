@@ -73,7 +73,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to list buckets: %v", err)
 	}
-	log.Println("Buckets:")
+	log.Println("[TEST] List up buckets:")
 	for _, bucket := range buckets.Buckets {
 		log.Printf("  - %s", *bucket.Name)
 	}
