@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"os"
 
@@ -9,7 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gin-gonic/gin"
-	audit "github.com/gunh0/aws-security-hub/audit"
+	apiGatewayChecker "github.com/gunh0/aws-security-hub/audit/apigateway"
+	ecsChecker "github.com/gunh0/aws-security-hub/audit/ecs"
 	docs "github.com/gunh0/aws-security-hub/docs"
 	utils "github.com/gunh0/aws-security-hub/utils"
 	"github.com/joho/godotenv"
@@ -45,24 +47,43 @@ func initializeRoutes(r *gin.Engine, cfg aws.Config) {
 		serverUtils.GET("/hello", utils.HealthCheckHandler)
 	}
 
+	// API Gateway specific routes
+	apiGatewayGroup := r.Group("/apigateway")
+	{
+		apiGatewayGroup.GET("/api-gw-execution-logging-enabled", func(c *gin.Context) {
+			apiGatewayChecker.APIGWExecutionLoggingEnabledHandler(cfg, c)
+		})
+	}
+
 	// ECS specific routes
 	ecsGroup := r.Group("/ecs")
 	{
 		ecsGroup.GET("/ecs-task-definition-user-for-host-mode-check", func(c *gin.Context) {
-			audit.ECSTaskDefinitionUserForHostModeCheckHandler(cfg, c)
+			ecsChecker.ECSTaskDefinitionUserForHostModeCheckHandler(cfg, c)
 		})
 	}
 
 	// Setup Swagger documentation
-	docs.SwaggerInfo.Title = "AWS Security Hub Utils"
+	docs.SwaggerInfo.Title = "AWS Security Hub"
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 func main() {
+	// Load environment variables from .env file
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
+
+	// Set up log file for Gin
+	logFile, err := os.Create("gin.log")
+	if err != nil {
+		log.Fatalf("Failed to create log file: %v", err)
+	}
+	defer logFile.Close()
+
+	// Configure Gin to write logs to both the log file and stdout
+	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout)
 
 	// Setup AWS SDK
 	cfg := setupAWSSDK()
@@ -73,7 +94,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to list buckets: %v", err)
 	}
-	log.Println("[TEST] List up buckets:")
+	log.Println("[TEST] List of buckets:")
 	for _, bucket := range buckets.Buckets {
 		log.Printf("  - %s", *bucket.Name)
 	}

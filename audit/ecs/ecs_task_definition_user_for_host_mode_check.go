@@ -1,4 +1,4 @@
-package audit
+package ecs
 
 import (
 	"context"
@@ -18,7 +18,7 @@ func ECSTaskDefinitionUserForHostModeCheck(cfg aws.Config) string {
 	// List Task Definitions
 	taskDefinitions, err := client.ListTaskDefinitions(context.Background(), &ecs.ListTaskDefinitionsInput{})
 	if err != nil {
-		return fmt.Sprintf("Unable to list task definitions: %v", err)
+		return fmt.Sprintf("[-] Unable to list task definitions: %v", err)
 	}
 
 	var resultMsg string
@@ -28,11 +28,11 @@ func ECSTaskDefinitionUserForHostModeCheck(cfg aws.Config) string {
 			TaskDefinition: aws.String(taskDefinition),
 		})
 		if err != nil {
-			return fmt.Sprintf("Unable to describe task definition %s: %v", aws.String(taskDefinition), err)
+			return fmt.Sprintf("[-] Unable to describe task definition %s: %v", *aws.String(taskDefinition), err)
 		}
 
 		// Assuming the intention is to log the network mode and IPC mode (User field seems to be mistakenly referred to as IpcMode)
-		resultMsg += fmt.Sprintf("Task Definition: %s\n  - Network Mode: %s\n  - IPC Mode: %s\n", aws.String(taskDefinition), taskDefinitionDetails.TaskDefinition.NetworkMode, taskDefinitionDetails.TaskDefinition, taskDefinitionDetails.TaskDefinition.IpcMode)
+		resultMsg += fmt.Sprintf("Task Definition: %s\n  - Network Mode: %s\n  - IPC Mode: %s\n", *aws.String(taskDefinition), taskDefinitionDetails.TaskDefinition.NetworkMode, taskDefinitionDetails.TaskDefinition.IpcMode)
 	}
 
 	if resultMsg == "" {

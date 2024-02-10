@@ -4,6 +4,23 @@
         "contact": {}
     },
     "paths": {
+        "/apigateway/api-gw-execution-logging-enabled": {
+            "get": {
+                "description": "Checks if logging is enabled for all stages of API Gateway REST or WebSocket APIs.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "APIGateway"
+                ],
+                "summary": "Checks if logging is enabled for all stages of API Gateway REST or WebSocket APIs.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/ecs/ecs-task-definition-user-for-host-mode-check": {
             "get": {
                 "description": "Checks for secure networking modes and user definitions in ECS task definitions.",

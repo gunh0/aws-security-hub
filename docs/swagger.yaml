@@ -1,6 +1,19 @@
 info:
   contact: {}
 paths:
+  /apigateway/api-gw-execution-logging-enabled:
+    get:
+      description: Checks if logging is enabled for all stages of API Gateway REST
+        or WebSocket APIs.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Checks if logging is enabled for all stages of API Gateway REST or
+        WebSocket APIs.
+      tags:
+      - APIGateway
   /ecs/ecs-task-definition-user-for-host-mode-check:
     get:
       description: Checks for secure networking modes and user definitions in ECS

@@ -1,0 +1,36 @@
+{
+    "Framework": "AWS-Security-Hub",
+    "Version": "0.1",
+    "Provider": "AWS",
+    "Description": "The AWS Security Hub compliance pack provides a set of security and compliance checks that help you maintain the security posture of your AWS environment.",
+    "Requirements": [
+        {
+            "Id": "Account.1",
+            "Description": "Security contact information should be provided for an AWS account",
+            "Checks": [],
+            "Attributes": [
+                {
+                    "Section": "AWS account controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-4(26), NIST.800-53.r5 AU-10, NIST.800-53.r5 AU-12, NIST.800-53.r5 AU-2, NIST.800-53.r5 AU-3, NIST.800-53.r5 AU-6(3), NIST.800-53.r5 AU-6(4), NIST.800-53.r5 CA-7, NIST.800-53.r5 SC-7(9), NIST.800-53.r5 SI-7(8)",
+                    "Category": "Identify > Logging",
+                    "Severity": "Medium",
+                    "Description": "This control checks if an Amazon Web Services (AWS) account has security contact information. The control fails if security contact information is not provided for the account."
+                }
+            ]
+        },
+        {
+            "Id": "APIGateway.1",
+            "Description": "API Gateway REST and WebSocket API execution logging should be enabled",
+            "Checks": [],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-4(26), NIST.800-53.r5 AU-10, NIST.800-53.r5 AU-12, NIST.800-53.r5 AU-2, NIST.800-53.r5 AU-3, NIST.800-53.r5 AU-6(3), NIST.800-53.r5 AU-6(4), NIST.800-53.r5 CA-7, NIST.800-53.r5 SC-7(9), NIST.800-53.r5 SI-7(8)",
+                    "Category": "Identify > Logging",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether all stages of an Amazon API Gateway REST or WebSocket API have logging enabled. The control fails if the loggingLevel isn't ERROR or INFO for all stages of the API. Unless you provide custom parameter values to indicate that a specific log type should be enabled, Security Hub produces a passed finding if the logging level is either ERROR or INFO."
+                }
+            ]
+        }
+    ]
+}

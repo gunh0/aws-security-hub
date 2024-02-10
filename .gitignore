@@ -27,3 +27,4 @@ go.work
 .idea/
 .vscode/
 .env
+*.log
