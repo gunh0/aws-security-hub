@@ -3,53 +3,62 @@ package ecs
 import (
 	"context"
 	"fmt"
-	"net/http"
+	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecs"
-	"github.com/gin-gonic/gin"
+	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
 )
 
 // ECSTaskDefinitionUserForHostModeCheck checks for secure networking modes and user definitions in ECS task definitions.
-func ECSTaskDefinitionUserForHostModeCheck(cfg aws.Config) string {
-	// Create an ECS service client
-	client := ecs.NewFromConfig(cfg)
-
-	// List Task Definitions
-	taskDefinitions, err := client.ListTaskDefinitions(context.Background(), &ecs.ListTaskDefinitionsInput{})
+func ECSTaskDefinitionUserForHostModeCheck(client *ecs.Client) {
+	// List only active Task Definitions
+	taskDefinitions, err := client.ListTaskDefinitions(context.TODO(), &ecs.ListTaskDefinitionsInput{
+		Status: types.TaskDefinitionStatusActive, // Ensure only active task definitions are listed
+	})
 	if err != nil {
-		return fmt.Sprintf("[-] Unable to list task definitions: %v", err)
+		log.Fatalf("[-] Unable to list task definitions: %v", err)
 	}
 
-	var resultMsg string
-	for _, taskDefinition := range taskDefinitions.TaskDefinitionArns {
+	if len(taskDefinitions.TaskDefinitionArns) == 0 {
+		fmt.Println("[PASS] No active task definitions found.")
+		return
+	}
+
+	// Iterate through each task definition and describe its details
+	for _, taskDefinitionArn := range taskDefinitions.TaskDefinitionArns {
 		// Describe Task Definition
-		taskDefinitionDetails, err := client.DescribeTaskDefinition(context.Background(), &ecs.DescribeTaskDefinitionInput{
-			TaskDefinition: aws.String(taskDefinition),
+		taskDefinitionDetails, err := client.DescribeTaskDefinition(context.TODO(), &ecs.DescribeTaskDefinitionInput{
+			TaskDefinition: aws.String(taskDefinitionArn),
 		})
 		if err != nil {
-			return fmt.Sprintf("[-] Unable to describe task definition %s: %v", *aws.String(taskDefinition), err)
+			log.Printf("[-] Unable to describe task definition %s: %v", taskDefinitionArn, err)
+			continue
 		}
 
-		// Assuming the intention is to log the network mode and IPC mode (User field seems to be mistakenly referred to as IpcMode)
-		resultMsg += fmt.Sprintf("Task Definition: %s\n  - Network Mode: %s\n  - IPC Mode: %s\n", *aws.String(taskDefinition), taskDefinitionDetails.TaskDefinition.NetworkMode, taskDefinitionDetails.TaskDefinition.IpcMode)
+		td := taskDefinitionDetails.TaskDefinition
+
+		// Check if the task definition is using host network mode
+		if td.NetworkMode == types.NetworkModeHost {
+			fmt.Printf("Task Definition: %s is using Host Network Mode\n", taskDefinitionArn)
+
+			// Check each container definition for privileged or user configurations
+			for _, containerDef := range td.ContainerDefinitions {
+				if containerDef.Privileged != nil && *containerDef.Privileged {
+					fmt.Printf("  [-] Container %s has privileged access enabled (privileged=true)\n", *containerDef.Name)
+				} else {
+					fmt.Printf("  [+] Container %s does not have privileged access (privileged=false or undefined)\n", *containerDef.Name)
+				}
+
+				// Check if user is root or undefined
+				if containerDef.User == nil || *containerDef.User == "root" {
+					fmt.Printf("  [-] Container %s is running as root or user is not specified (user=root or empty)\n", *containerDef.Name)
+				} else {
+					fmt.Printf("  [+] Container %s is running with a non-root user (user=%s)\n", *containerDef.Name, *containerDef.User)
+				}
+			}
+		} else {
+			fmt.Printf("Task Definition: %s is using a secure network mode (Network Mode: %s)\n", taskDefinitionArn, td.NetworkMode)
+		}
 	}
-
-	if resultMsg == "" {
-		resultMsg = "No task definitions found."
-	}
-
-	return resultMsg
-}
-
-// ECSTaskDefinitionUserForHostModeCheckHandler godoc
-// @Summary Checks for secure networking modes and user definitions in ECS task definitions.
-// @Description Checks for secure networking modes and user definitions in ECS task definitions.
-// @Tags ECS
-// @Produce  json
-// @Success 200
-// @Router /ecs/ecs-task-definition-user-for-host-mode-check [get]
-func ECSTaskDefinitionUserForHostModeCheckHandler(cfg aws.Config, c *gin.Context) {
-	resultMsg := ECSTaskDefinitionUserForHostModeCheck(cfg)
-	c.JSON(http.StatusOK, gin.H{"result": resultMsg})
 }

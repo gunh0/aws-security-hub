@@ -2,109 +2,104 @@ package main
 
 import (
 	"context"
-	"io"
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
+	ec2Checker "aws-security-hub/audit/ec2"
+	ecsChecker "aws-security-hub/audit/ecs"
+
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/gin-gonic/gin"
-	apiGatewayChecker "github.com/gunh0/aws-security-hub/audit/apigateway"
-	ecsChecker "github.com/gunh0/aws-security-hub/audit/ecs"
-	docs "github.com/gunh0/aws-security-hub/docs"
-	utils "github.com/gunh0/aws-security-hub/utils"
-	"github.com/joho/godotenv"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	"github.com/aws/aws-sdk-go-v2/service/ecs"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// setupAWSSDK initializes the AWS SDK configuration.
-func setupAWSSDK() aws.Config {
-	// Load AWS configuration with region and credentials.
+// Initialize the AWS SDK EC2 client
+func InitAwsClient() *ec2.Client {
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion(os.Getenv("AWS_REGION")),
-		config.WithCredentialsProvider(aws.NewCredentialsCache(aws.CredentialsProviderFunc(func(context.Context) (aws.Credentials, error) {
-			return aws.Credentials{
-				AccessKeyID:     os.Getenv("AWS_ACCESS_KEY_ID"),
-				SecretAccessKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
-			}, nil
-		}))),
+		config.WithRegion(viper.GetString("aws_region")), // Use Viper to get the region
 	)
 	if err != nil {
 		log.Fatalf("[-] Unable to load SDK config, %v", err)
-	} else {
-		log.Println("[+] AWS SDK Config loaded successfully")
 	}
-	return cfg
+
+	return ec2.NewFromConfig(cfg)
 }
 
-// initializeRoutes sets up the routes for the Gin server.
-func initializeRoutes(r *gin.Engine, cfg aws.Config) {
-	// Health check route
-	serverUtils := r.Group("/srv")
-	{
-		serverUtils.GET("/hello", utils.HealthCheckHandler)
+// Initialize the AWS SDK ECS client (can be reused if needed)
+func InitEcsClient() *ecs.Client {
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion(viper.GetString("aws_region")), // Use Viper to get the region
+	)
+	if err != nil {
+		log.Fatalf("[-] Unable to load SDK config, %v", err)
 	}
 
-	// API Gateway specific routes
-	apiGatewayGroup := r.Group("/apigateway")
-	{
-		apiGatewayGroup.GET("/api-gw-execution-logging-enabled", func(c *gin.Context) {
-			apiGatewayChecker.APIGWExecutionLoggingEnabledHandler(cfg, c)
-		})
+	return ecs.NewFromConfig(cfg)
+}
+
+var rootCmd = &cobra.Command{
+	Use:   "audit",
+	Short: "Audit your AWS resources",
+}
+
+var checkRestrictedCommonPortsCmd = &cobra.Command{
+	Use:     "restricted-common-ports",
+	Short:   "Check EC2 security groups for unrestricted access to high-risk ports",
+	Aliases: []string{"ec2.19"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client := InitAwsClient()
+		ec2Checker.CheckSecurityGroup(client)
+	},
+}
+
+var checkEbsSnapshotCmd = &cobra.Command{
+	Use:     "ebs-snapshot-public-restorable-check",
+	Short:   "Check EBS snapshots for public restorability",
+	Aliases: []string{"ec2.1"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client := InitAwsClient()
+		ec2Checker.CheckEbsSnapshotPublic(client)
+	},
+}
+
+var checkEcsTaskDefinitionCmd = &cobra.Command{
+	Use:     "ecs-task-definition-user-for-host-mode-check",
+	Short:   "Amazon ECS task definitions should have secure networking modes and user definitions.",
+	Aliases: []string{"ecs.1"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client := InitEcsClient()
+		ecsChecker.ECSTaskDefinitionUserForHostModeCheck(client)
+	},
+}
+
+func init() {
+	// Set default AWS region to South Korea (ap-northeast-2)
+	viper.SetDefault("aws_region", "ap-northeast-2") // Set default region to ap-northeast-2 (South Korea)
+
+	viper.BindEnv("aws_access_key_id")
+	viper.BindEnv("aws_secret_access_key")
+	viper.BindEnv("aws_region")
+
+	viper.SetConfigFile(".env")
+	err := viper.ReadInConfig()
+	if err != nil {
+		fmt.Printf("[*] No config file found, using environment variables.\n")
 	}
 
-	// ECS specific routes
-	ecsGroup := r.Group("/ecs")
-	{
-		ecsGroup.GET("/ecs-task-definition-user-for-host-mode-check", func(c *gin.Context) {
-			ecsChecker.ECSTaskDefinitionUserForHostModeCheckHandler(cfg, c)
-		})
-	}
+	// Add EC2 related commands
+	rootCmd.AddCommand(checkRestrictedCommonPortsCmd)
+	rootCmd.AddCommand(checkEbsSnapshotCmd)
 
-	// Setup Swagger documentation
-	docs.SwaggerInfo.Title = "AWS Security Hub"
-	docs.SwaggerInfo.BasePath = "/"
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// Add ECS related commands
+	rootCmd.AddCommand(checkEcsTaskDefinitionCmd)
 }
 
 func main() {
-	// Load environment variables from .env file
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
-
-	// Set up log file for Gin
-	logFile, err := os.Create("gin.log")
-	if err != nil {
-		log.Fatalf("Failed to create log file: %v", err)
-	}
-	defer logFile.Close()
-
-	// Configure Gin to write logs to both the log file and stdout
-	gin.DefaultWriter = io.MultiWriter(logFile, os.Stdout)
-
-	// Setup AWS SDK
-	cfg := setupAWSSDK()
-
-	// Create an Amazon S3 service client and list buckets as a test
-	client := s3.NewFromConfig(cfg)
-	buckets, err := client.ListBuckets(context.Background(), &s3.ListBucketsInput{})
-	if err != nil {
-		log.Fatalf("Unable to list buckets: %v", err)
-	}
-	log.Println("[TEST] List of buckets:")
-	for _, bucket := range buckets.Buckets {
-		log.Printf("  - %s", *bucket.Name)
-	}
-
-	// Initialize Gin server
-	r := gin.Default()
-	initializeRoutes(r, cfg)
-
-	// Start the server
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("Failed to run server: %v", err)
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
