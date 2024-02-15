@@ -5,12 +5,21 @@ import (
 	"fmt"
 	"log"
 
+	"aws-security-hub/util"
+
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
 // Check for publicly restorable EBS snapshots
 func CheckEbsSnapshotPublic(client *ec2.Client) {
+	// Load compliance data and print the description for EC2.1
+	compliance, err := util.LoadComplianceData("compliance/aws_security_hub.json")
+	if err != nil {
+		log.Fatalf("[-] Error loading compliance data: %v", err)
+	}
+	util.PrintComplianceInfo(compliance, "EC2.1")
+
 	fmt.Println("[*] Fetching EBS snapshots...")
 	input := &ec2.DescribeSnapshotsInput{
 		OwnerIds: []string{"self"},

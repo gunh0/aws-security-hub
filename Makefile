@@ -1,8 +1,13 @@
 # Default Go environment variables
 GO := go
 
-# Targets
-run: tidy start
+# Run the application with arguments (e.g., make run ec2.1)
+run: tidy
+	$(GO) run main.go $(filter-out $@,$(MAKECMDGOALS))
+
+# Ignore additional make arguments
+%:
+	@:
 
 # Go module tidy (cleanup dependencies)
 tidy:
