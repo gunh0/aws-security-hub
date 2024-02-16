@@ -1,5 +1,4 @@
 // audit/ec2/restricted_common_ports.go
-
 package ec2
 
 import (
