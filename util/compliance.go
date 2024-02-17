@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"strings"
 )
 
 // Compliance structure to match the JSON structure
@@ -41,9 +43,11 @@ func LoadComplianceData(filePath string) (*Compliance, error) {
 func PrintComplianceInfo(compliance *Compliance, id string) {
 	for _, requirement := range compliance.Requirements {
 		if requirement.Id == id {
-			fmt.Printf("[%s] %s\n", requirement.Id, requirement.Description)
+			log.Println(strings.Repeat("-", 100))
+			log.Printf("[%s] %s\n", requirement.Id, requirement.Description)
+			log.Println(strings.Repeat("-", 100))
 			return
 		}
 	}
-	fmt.Printf("Compliance requirement with ID %s not found.\n", id)
+	log.Printf("[ERROR] Compliance requirement with ID %s not found.\n", id)
 }

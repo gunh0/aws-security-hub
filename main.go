@@ -50,7 +50,9 @@ var checkApiGwExecutionLoggingEnabledCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Failed to initialize AWS client: %v", err)
 		}
-		apigatewayChecker.CheckApiGwExecutionLoggingEnabled(client.Config)
+		result := apigatewayChecker.CheckApiGwExecutionLoggingEnabled(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.1] %s", result)
 	},
 }
 
