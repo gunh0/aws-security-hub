@@ -1,3 +1,4 @@
+// audit/apigateway/api_gw_execution_logging_enabled.go
 package apigateway
 
 import (
@@ -14,10 +15,13 @@ import (
 func CheckApiGwExecutionLoggingEnabled(cfg aws.Config) string {
 	compliance, err := util.LoadComplianceData("compliance/aws_security_hub.json")
 	if err != nil {
-		log.Fatalf("[-] Error loading compliance data: %v", err)
+		log.Fatalf("[ERROR] Error loading compliance data: %v", err)
 		return "NA"
 	}
 	util.PrintComplianceInfo(compliance, "APIGateway.1")
+	/* Description:
+	This control checks whether all stages of an Amazon API Gateway REST or WebSocket API have logging enabled. The control fails if the loggingLevel isn't ERROR or INFO for all stages of the API. Unless you provide custom parameter values to indicate that a specific log type should be enabled, Security Hub produces a passed finding if the logging level is either ERROR or INFO.
+	*/
 
 	// Create API Gateway clients
 	apigatewayClient := apigateway.NewFromConfig(cfg)

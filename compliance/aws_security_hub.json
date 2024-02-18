@@ -21,7 +21,7 @@
         {
             "Id": "APIGateway.1",
             "Description": "API Gateway REST and WebSocket API execution logging should be enabled",
-            "Checks": [],
+            "Checks": ["api-gw-execution-logging-enabled"],
             "Attributes": [
                 {
                     "Section": "Amazon API Gateway controls",
@@ -29,6 +29,20 @@
                     "Category": "Identify > Logging",
                     "Severity": "Medium",
                     "Description": "This control checks whether all stages of an Amazon API Gateway REST or WebSocket API have logging enabled. The control fails if the loggingLevel isn't ERROR or INFO for all stages of the API. Unless you provide custom parameter values to indicate that a specific log type should be enabled, Security Hub produces a passed finding if the logging level is either ERROR or INFO."
+                }
+            ]
+        },
+        {
+            "Id": "APIGateway.2",
+            "Description": "API Gateway REST API stages should be configured to use SSL certificates for backend authentication",
+            "Checks": [],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-17(2), NIST.800-53.r5 AC-4, NIST.800-53.r5 IA-5(1), NIST.800-53.r5 SC-12(3), NIST.800-53.r5 SC-13, NIST.800-53.r5 SC-23, NIST.800-53.r5 SC-23(3), NIST.800-53.r5 SC-7(4), NIST.800-53.r5 SC-8, NIST.800-53.r5 SC-8(1), NIST.800-53.r5 SC-8(2), NIST.800-53.r5 SI-7(6)",
+                    "Category": "Protect > Data Protection > Encryption of data-in-transit",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether Amazon API Gateway REST API stages have SSL certificates configured. Backend systems use these certificates to authenticate that incoming requests are from API Gateway."
                 }
             ]
         },

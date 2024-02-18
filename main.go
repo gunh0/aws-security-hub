@@ -56,6 +56,22 @@ var checkApiGwExecutionLoggingEnabledCmd = &cobra.Command{
 	},
 }
 
+// APIGateway.2
+var checkApiGwSslEnabledCmd = &cobra.Command{
+	Use:     "api-gw-ssl-enabled",
+	Short:   "API Gateway REST API stages should be configured to use SSL certificates for backend authentication",
+	Aliases: []string{"apigateway.2"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := apigatewayChecker.CheckApiGwSslEnabled(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.2] %s", result)
+	},
+}
+
 // EC2.19
 var checkRestrictedCommonPortsCmd = &cobra.Command{
 	Use:     "restricted-common-ports",
@@ -116,7 +132,8 @@ func init() {
 	}
 
 	// Add all commands to root command
-	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)
+	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd) // APIGateway.1
+	rootCmd.AddCommand(checkApiGwSslEnabledCmd)              // APIGateway.2
 	rootCmd.AddCommand(checkRestrictedCommonPortsCmd)
 	rootCmd.AddCommand(checkEbsSnapshotCmd)
 	rootCmd.AddCommand(checkEcsTaskDefinitionCmd)
