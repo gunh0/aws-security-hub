@@ -98,7 +98,8 @@ var checkEbsSnapshotCmd = &cobra.Command{
 			log.Fatalf("Failed to initialize AWS client: %v", err)
 		}
 		ec2Client := ec2.NewFromConfig(client.Config)
-		ec2Checker.CheckEbsSnapshotPublic(ec2Client)
+		result := ec2Checker.CheckEbsSnapshotPublicRestorableCheck(ec2Client)
+		log.Printf("[EC2.1] %s", result)
 	},
 }
 

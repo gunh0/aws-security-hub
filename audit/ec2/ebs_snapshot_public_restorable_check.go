@@ -2,7 +2,6 @@ package ec2
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"aws-security-hub/util"
@@ -11,54 +10,66 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
-// Check for publicly restorable EBS snapshots
-func CheckEbsSnapshotPublic(client *ec2.Client) {
-	// Load compliance data and print the description for EC2.1
+func CheckEbsSnapshotPublicRestorableCheck(client *ec2.Client) string {
 	compliance, err := util.LoadComplianceData("compliance/aws_security_hub.json")
 	if err != nil {
-		log.Fatalf("[-] Error loading compliance data: %v", err)
+		log.Printf("└─[ERROR] Error loading compliance data: %v", err)
+		return "NA"
 	}
 	util.PrintComplianceInfo(compliance, "EC2.1")
+	/* Description:
+	This control checks whether Amazon Elastic Block Store snapshots are not public. The control fails if Amazon EBS snapshots are restorable by anyone.
+	*/
 
-	fmt.Println("[*] Fetching EBS snapshots...")
+	log.Println("[*] Fetching EBS snapshots...")
 	input := &ec2.DescribeSnapshotsInput{
 		OwnerIds: []string{"self"},
 	}
 	resp, err := client.DescribeSnapshots(context.TODO(), input)
 	if err != nil {
-		log.Fatalf("[-] Failed to describe EBS snapshots: %v", err)
+		log.Printf("└─[ERROR] Failed to describe EBS snapshots: %v", err)
+		return "NA"
 	}
 
-	fmt.Println("    [+] Successfully fetched EBS snapshots")
+	if len(resp.Snapshots) == 0 {
+		log.Println("└─[*] No EBS snapshots found")
+		return "PASS"
+	}
+
+	publicSnapshots := 0
+
 	for _, snapshot := range resp.Snapshots {
-		checkSnapshotPublicAccess(client, *snapshot.SnapshotId)
-	}
-}
+		log.Printf("└─[*] Checking snapshot: %s", *snapshot.SnapshotId)
 
-// Check if the snapshot is publicly restorable by using DescribeSnapshotAttribute
-func checkSnapshotPublicAccess(client *ec2.Client, snapshotId string) {
-	attributeInput := &ec2.DescribeSnapshotAttributeInput{
-		Attribute:  types.SnapshotAttributeNameCreateVolumePermission,
-		SnapshotId: &snapshotId,
-	}
+		attributeInput := &ec2.DescribeSnapshotAttributeInput{
+			Attribute:  types.SnapshotAttributeNameCreateVolumePermission,
+			SnapshotId: snapshot.SnapshotId,
+		}
 
-	attributeResp, err := client.DescribeSnapshotAttribute(context.TODO(), attributeInput)
-	if err != nil {
-		log.Fatalf("[-] Failed to describe snapshot attributes for %s: %v", snapshotId, err)
-	}
+		attributeResp, err := client.DescribeSnapshotAttribute(context.TODO(), attributeInput)
+		if err != nil {
+			log.Printf("  └─[ERROR] Failed to describe snapshot attribute: %v", err)
+			continue
+		}
 
-	// Check if the snapshot is publicly restorable
-	isPublic := false
-	for _, permission := range attributeResp.CreateVolumePermissions {
-		if permission.Group == types.PermissionGroupAll {
-			isPublic = true
-			break
+		for _, permission := range attributeResp.CreateVolumePermissions {
+			if permission.Group == "all" {
+				log.Printf("  └─[FAIL] Snapshot %s is public", *snapshot.SnapshotId)
+				publicSnapshots++
+				break
+			}
+		}
+
+		if publicSnapshots == 0 {
+			log.Printf("  └─[PASS] Snapshot %s is not public", *snapshot.SnapshotId)
 		}
 	}
 
-	if isPublic {
-		fmt.Printf("    [-] EBS Snapshot %s is publicly restorable\n", snapshotId)
-	} else {
-		fmt.Printf("    [+] EBS Snapshot %s is not publicly restorable\n", snapshotId)
+	if publicSnapshots > 0 {
+		log.Printf("└─[FAIL] %d public snapshots found", publicSnapshots)
+		return "FAIL"
 	}
+
+	log.Println("└─[PASS] No public snapshots found")
+	return "PASS"
 }
