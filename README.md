@@ -11,7 +11,9 @@ The ultimate goal is to implement all controls as specified in the [AWS Security
 This tool will provide comprehensive audit capabilities across the following AWS services and security controls:
 
 - **Security Hub controls for AWS accounts**
-- **Security Hub controls for API Gateway**
+- **Amazon API Gateway controls**
+  - [x] [APIGateway.1] API Gateway REST and WebSocket API execution logging should be enabled
+  - [x] [APIGateway.2] API Gateway REST API stages should be configured to use SSL certificates for backend authentication
 - **Security Hub controls for AWS AppSync**
 - **Security Hub controls for Athena**
 - **Security Hub controls for AWS Backup**
@@ -27,9 +29,11 @@ This tool will provide comprehensive audit capabilities across the following AWS
 - **Security Hub controls for DataSync**
 - **Security Hub controls for Detective**
 - **Security Hub controls for AWS DMS (Database Migration Service)**
-- **Security Hub controls for Amazon DocumentDB**
+- **Amazon DocumentDB controls**
+  - [x] [DocumentDB.1] Amazon DocumentDB clusters should be encrypted at rest
 - **Security Hub controls for DynamoDB**
-- **Security Hub controls for Amazon EC2**
+- **Amazon EC2 controls**
+  - [x] [EC2.1] Amazon EBS snapshots should not be publicly restorable
 - **Security Hub controls for Auto Scaling**
 - **Security Hub controls for Amazon ECR**
 - **Security Hub controls for Amazon ECS**

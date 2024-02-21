@@ -7,8 +7,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.33
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.25.8
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.22.8
+	github.com/aws/aws-sdk-go-v2/service/docdb v1.37.4
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.177.2
-	github.com/aws/aws-sdk-go-v2/service/ecs v1.45.4
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 )
