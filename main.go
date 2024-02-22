@@ -87,6 +87,22 @@ var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	},
 }
 
+// DocuemntDB.2
+var checkDocdbClusterBackupRetentionCheckCmd = &cobra.Command{
+	Use:     "docdb-cluster-backup-retention-check",
+	Short:   "Amazon DocumentDB clusters should have an adequate backup retention period",
+	Aliases: []string{"documentdb.2"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := documentdbChecker.CheckDocdbClusterBackupRetentionCheck(client.Config)
+		// Print Result
+		log.Printf("[DocumentDB.2] %s", result)
+	},
+}
+
 // EC2.1
 var checkEbsSnapshotPublicRestorableCheckCmd = &cobra.Command{
 	Use:     "ebs-snapshot-public-restorable-check",
@@ -121,6 +137,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)     // APIGateway.1
 	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                  // APIGateway.2
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)            // DocumentDB.1
+	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd) // DocumentDB.2
 	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd) // EC2.1
 }
 

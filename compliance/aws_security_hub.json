@@ -53,6 +53,22 @@
             ]
         },
         {
+            "Id": "DocumentDB.2",
+            "Description": "Amazon DocumentDB clusters should have an adequate backup retention period",
+            "Checks": [
+                "docdb-cluster-backup-retention-check"
+            ],
+            "Attributes":[
+                {
+                    "Section": "Amazon DocumentDB controls",
+                    "RelatedRequirements": "NIST.800-53.r5 SI-12",
+                    "Category": "Recover > Resilience > Backups enabled",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether an Amazon DocumentDB cluster has a backup retention period greater than or equal to the specified time frame. The control fails if the backup retention period is less than the specified time frame. Unless you provide a custom parameter value for the backup retention period, Security Hub uses a default value of 7 days."
+                }
+            ]
+        },
+        {
             "Id": "EC2.1",
             "Description": "Amazon EBS snapshots should not be publicly restorable",
             "Checks": [
