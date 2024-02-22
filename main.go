@@ -87,7 +87,7 @@ var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	},
 }
 
-// DocuemntDB.2
+// DocumentDB.2
 var checkDocdbClusterBackupRetentionCheckCmd = &cobra.Command{
 	Use:     "docdb-cluster-backup-retention-check",
 	Short:   "Amazon DocumentDB clusters should have an adequate backup retention period",
@@ -100,6 +100,22 @@ var checkDocdbClusterBackupRetentionCheckCmd = &cobra.Command{
 		result := documentdbChecker.CheckDocdbClusterBackupRetentionCheck(client.Config)
 		// Print Result
 		log.Printf("[DocumentDB.2] %s", result)
+	},
+}
+
+// DocumentDB.3
+var checkDocdbClusterSnapshotPublicProhibitedCmd = &cobra.Command{
+	Use:     "docdb-cluster-snapshot-public-prohibited",
+	Short:   "Amazon DocumentDB manual cluster snapshots should not be public",
+	Aliases: []string{"documentdb.3"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := documentdbChecker.CheckDocdbClusterSnapshotPublicProhibited(client.Config)
+		// Print Result
+		log.Printf("[DocumentDB.3] %s", result)
 	},
 }
 
@@ -134,11 +150,12 @@ func init() {
 	}
 
 	// Add all commands to root command
-	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)     // APIGateway.1
-	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                  // APIGateway.2
-	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)            // DocumentDB.1
-	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd) // DocumentDB.2
-	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd) // EC2.1
+	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)         // APIGateway.1
+	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                      // APIGateway.2
+	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                // DocumentDB.1
+	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)     // DocumentDB.2
+	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd) // DocumentDB.3
+	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)     // EC2.1
 }
 
 func main() {

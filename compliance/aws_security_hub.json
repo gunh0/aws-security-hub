@@ -58,13 +58,29 @@
             "Checks": [
                 "docdb-cluster-backup-retention-check"
             ],
-            "Attributes":[
+            "Attributes": [
                 {
                     "Section": "Amazon DocumentDB controls",
                     "RelatedRequirements": "NIST.800-53.r5 SI-12",
                     "Category": "Recover > Resilience > Backups enabled",
                     "Severity": "Medium",
                     "Description": "This control checks whether an Amazon DocumentDB cluster has a backup retention period greater than or equal to the specified time frame. The control fails if the backup retention period is less than the specified time frame. Unless you provide a custom parameter value for the backup retention period, Security Hub uses a default value of 7 days."
+                }
+            ]
+        },
+        {
+            "Id": "DocumentDB.3",
+            "Description": "Amazon DocumentDB manual cluster snapshots should not be public",
+            "Checks": [
+                "docdb-cluster-snapshot-public-prohibited"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon DocumentDB controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-21, NIST.800-53.r5 AC-3, NIST.800-53.r5 AC-3(7), NIST.800-53.r5 AC-4, NIST.800-53.r5 AC-4(21), NIST.800-53.r5 AC-6, NIST.800-53.r5 SC-7, NIST.800-53.r5 SC-7(11), NIST.800-53.r5 SC-7(16), NIST.800-53.r5 SC-7(20), NIST.800-53.r5 SC-7(21), NIST.800-53.r5 SC-7(3), NIST.800-53.r5 SC-7(4), NIST.800-53.r5 SC-7(9)",
+                    "Category": "Protect > Secure network configuration",
+                    "Severity": "Critical",
+                    "Description": "This control checks whether an Amazon DocumentDB manual cluster snapshot is public. The control fails if the manual cluster snapshot is public."
                 }
             ]
         },
