@@ -119,6 +119,22 @@ var checkDocdbClusterSnapshotPublicProhibitedCmd = &cobra.Command{
 	},
 }
 
+// DocumentDB.4
+var CheckDocdbClusterAuditLoggingEnabledCmd = &cobra.Command{
+	Use:     "docdb-cluster-audit-logging-enabled",
+	Short:   "Amazon DocumentDB clusters should publish audit logs to Amazon CloudWatch Logs",
+	Aliases: []string{"documentdb.4"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := documentdbChecker.CheckDocdbClusterAuditLoggingEnabled(client.Config)
+		// Print Result
+		log.Printf("[DocumentDB.4] %s", result)
+	},
+}
+
 // EC2.1
 var checkEbsSnapshotPublicRestorableCheckCmd = &cobra.Command{
 	Use:     "ebs-snapshot-public-restorable-check",
@@ -155,6 +171,7 @@ func init() {
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)     // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd) // DocumentDB.3
+	rootCmd.AddCommand(CheckDocdbClusterAuditLoggingEnabledCmd)      // DocumentDB.4
 	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)     // EC2.1
 }
 

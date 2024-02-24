@@ -85,6 +85,22 @@
             ]
         },
         {
+            "Id": "DocumentDB.4",
+            "Description": "Amazon DocumentDB clusters should publish audit logs to CloudWatch Logs",
+            "Checks": [
+                "docdb-cluster-audit-logging-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon DocumentDB controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-2(4), NIST.800-53.r5 AC-4(26), NIST.800-53.r5 AC-6(9), NIST.800-53.r5 AU-10, NIST.800-53.r5 AU-12, NIST.800-53.r5 AU-2, NIST.800-53.r5 AU-3, NIST.800-53.r5 AU-6(3), NIST.800-53.r5 AU-6(4), NIST.800-53.r5 CA-7, NIST.800-53.r5 SC-7(9), NIST.800-53.r5 SI-3(8), NIST.800-53.r5 SI-4(20), NIST.800-53.r5 SI-7(8)",
+                    "Category": "Identify > Logging",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether an Amazon DocumentDB cluster publishes audit logs to Amazon CloudWatch Logs. The control fails if the cluster doesn't publish audit logs to CloudWatch Logs."
+                }
+            ]
+        },
+        {
             "Id": "EC2.1",
             "Description": "Amazon EBS snapshots should not be publicly restorable",
             "Checks": [

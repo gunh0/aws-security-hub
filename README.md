@@ -32,6 +32,8 @@ This tool will provide comprehensive audit capabilities across the following AWS
 - **Amazon DocumentDB controls**
   - [x] [DocumentDB.1] Amazon DocumentDB clusters should be encrypted at rest
   - [x] [DocumentDB.2] Amazon DocumentDB clusters should have an adequate backup retention period
+  - [x] [DocumentDB.3] Amazon DocumentDB manual cluster snapshots should not be public
+  - [x] [DocumentDB.4] Amazon DocumentDB clusters should publish audit logs to CloudWatch Logs
 - **Security Hub controls for DynamoDB**
 - **Amazon EC2 controls**
   - [x] [EC2.1] Amazon EBS snapshots should not be publicly restorable
