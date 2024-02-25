@@ -135,6 +135,22 @@ var CheckDocdbClusterAuditLoggingEnabledCmd = &cobra.Command{
 	},
 }
 
+// DocumentDB.5
+var checkDocdbClusterDeletionProtectionEnabledCmd = &cobra.Command{
+	Use:     "docdb-cluster-deletion-protection-enabled",
+	Short:   "Amazon DocumentDB clusters should have deletion protection enabled",
+	Aliases: []string{"documentdb.5"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := documentdbChecker.CheckDocdbClusterDeletionProtectionEnabled(client.Config)
+		// Print Result
+		log.Printf("[DocumentDB.5] %s", result)
+	},
+}
+
 // EC2.1
 var checkEbsSnapshotPublicRestorableCheckCmd = &cobra.Command{
 	Use:     "ebs-snapshot-public-restorable-check",
@@ -166,13 +182,14 @@ func init() {
 	}
 
 	// Add all commands to root command
-	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)         // APIGateway.1
-	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                      // APIGateway.2
-	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                // DocumentDB.1
-	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)     // DocumentDB.2
-	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd) // DocumentDB.3
-	rootCmd.AddCommand(CheckDocdbClusterAuditLoggingEnabledCmd)      // DocumentDB.4
-	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)     // EC2.1
+	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)          // APIGateway.1
+	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                       // APIGateway.2
+	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                 // DocumentDB.1
+	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)      // DocumentDB.2
+	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)  // DocumentDB.3
+	rootCmd.AddCommand(CheckDocdbClusterAuditLoggingEnabledCmd)       // DocumentDB.4
+	rootCmd.AddCommand(checkDocdbClusterDeletionProtectionEnabledCmd) // DocumentDB.5
+	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)      // EC2.1
 }
 
 func main() {

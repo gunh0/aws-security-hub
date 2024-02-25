@@ -101,6 +101,22 @@
             ]
         },
         {
+            "Id": "DocumentDB.5",
+            "Description": "Amazon DocumentDB clusters should have deletion protection enabled",
+            "Checks": [
+                "docdb-cluster-deletion-protection-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon DocumentDB controls",
+                    "RelatedRequirements": "NIST.800-53.r5 CA-9(1), NIST.800-53.r5 CM-2, NIST.800-53.r5 CM-2(2), NIST.800-53.r5 CM-3, NIST.800-53.r5 SC-5(2)",
+                    "Category": "Protect > Data protection > Data deletion protection",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether an Amazon DocumentDB cluster has deletion protection enabled. The control fails if the cluster doesn't have deletion protection enabled."
+                }
+            ]
+        },
+        {
             "Id": "EC2.1",
             "Description": "Amazon EBS snapshots should not be publicly restorable",
             "Checks": [
