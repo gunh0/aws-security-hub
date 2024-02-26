@@ -9,6 +9,7 @@ import (
 	apigatewayChecker "aws-security-hub/audit/apigateway"
 	documentdbChecker "aws-security-hub/audit/documentdb"
 	ec2Checker "aws-security-hub/audit/ec2"
+	s3Checker "aws-security-hub/audit/s3"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -167,6 +168,21 @@ var checkEbsSnapshotPublicRestorableCheckCmd = &cobra.Command{
 	},
 }
 
+// S3.1
+var checkS3AccountLevelPublicAccessBlocksPeriodicCmd = &cobra.Command{
+	Use:     "s3-account-level-public-access-blocks-periodic",
+	Short:   "S3 general purpose buckets should have block public access settings enabled",
+	Aliases: []string{"s3.1"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := s3Checker.CheckS3AccountLevelPublicAccessBlocksPeriodic(client.Config)
+		log.Printf("[S3.1] %s", result)
+	},
+}
+
 func init() {
 	// Set default AWS region to South Korea (ap-northeast-2)
 	viper.SetDefault("aws_region", "ap-northeast-2")
@@ -182,14 +198,15 @@ func init() {
 	}
 
 	// Add all commands to root command
-	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)          // APIGateway.1
-	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                       // APIGateway.2
-	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                 // DocumentDB.1
-	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)      // DocumentDB.2
-	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)  // DocumentDB.3
-	rootCmd.AddCommand(CheckDocdbClusterAuditLoggingEnabledCmd)       // DocumentDB.4
-	rootCmd.AddCommand(checkDocdbClusterDeletionProtectionEnabledCmd) // DocumentDB.5
-	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)      // EC2.1
+	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)             // APIGateway.1
+	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                          // APIGateway.2
+	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
+	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
+	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
+	rootCmd.AddCommand(CheckDocdbClusterAuditLoggingEnabledCmd)          // DocumentDB.4
+	rootCmd.AddCommand(checkDocdbClusterDeletionProtectionEnabledCmd)    // DocumentDB.5
+	rootCmd.AddCommand(checkEbsSnapshotPublicRestorableCheckCmd)         // EC2.1
+	rootCmd.AddCommand(checkS3AccountLevelPublicAccessBlocksPeriodicCmd) // S3.1
 }
 
 func main() {

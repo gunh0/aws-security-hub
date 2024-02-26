@@ -131,6 +131,22 @@
                     "Description": "This control checks whether Amazon Elastic Block Store snapshots are not public. The control fails if Amazon EBS snapshots are restorable by anyone."
                 }
             ]
+        },
+        {
+            "Id": "S3.1",
+            "Description": "S3 general purpose buckets should have block public access settings enabled",
+            "Checks": [
+                "s3-account-level-public-access-blocks-periodic"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon S3 controls",
+                    "RelatedRequirements": "CIS AWS Foundations Benchmark v3.0.0/2.1.4, CIS AWS Foundations Benchmark v1.4.0/2.1.5, PCI DSS v3.2.1/1.2.1, PCI DSS v3.2.1/1.3.1, PCI DSS v3.2.1/1.3.2, PCI DSS v3.2.1/1.3.4, PCI DSS v3.2.1/1.3.6, NIST.800-53.r5 AC-21, NIST.800-53.r5 AC-3, NIST.800-53.r5 AC-3(7), NIST.800-53.r5 AC-4, NIST.800-53.r5 AC-4(21), NIST.800-53.r5 AC-6, NIST.800-53.r5 SC-7, NIST.800-53.r5 SC-7(11), NIST.800-53.r5 SC-7(16), NIST.800-53.r5 SC-7(20), NIST.800-53.r5 SC-7(21), NIST.800-53.r5 SC-7(3), NIST.800-53.r5 SC-7(4), NIST.800-53.r5 SC-7(9)",
+                    "Category": "Protect > Secure network configuration",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether the preceding Amazon S3 block public access settings are configured at the account level for an S3 general purpose bucket. The control fails if one or more of the block public access settings are set to false."
+                }
+            ]
         }
     ]
 }
