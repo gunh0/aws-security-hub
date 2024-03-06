@@ -72,6 +72,22 @@ var checkApiGwSslEnabledCmd = &cobra.Command{
 	},
 }
 
+// APIGateway.3
+var checkApiGwXrayEnabledCmd = &cobra.Command{
+	Use:     "api-gw-xray-enabled",
+	Short:   "API Gateway REST API stages should have AWS X-Ray tracing enabled",
+	Aliases: []string{"apigateway.3"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := apigatewayChecker.CheckApiGwXrayEnabled(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.3] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -200,6 +216,7 @@ func init() {
 	// Add all commands to root command
 	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)             // APIGateway.1
 	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                          // APIGateway.2
+	rootCmd.AddCommand(checkApiGwXrayEnabledCmd)                         // APIGateway.3
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3

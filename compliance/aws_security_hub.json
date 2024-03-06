@@ -37,6 +37,22 @@
             ]
         },
         {
+            "Id": "APIGateway.3",
+            "Description": "API Gateway REST API stages should have AWS X-Ray tracing enabled",
+            "Checks": [
+                "api-gw-xray-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 CA-7",
+                    "Category": "Detect > Detection services",
+                    "Severity": "Low",
+                    "Description": "This control checks whether AWS X-Ray active tracing is enabled for your Amazon API Gateway REST API stages."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [
