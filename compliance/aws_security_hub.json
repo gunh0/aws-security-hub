@@ -53,6 +53,22 @@
             ]
         },
         {
+            "Id": "APIGateway.4",
+            "Description": "API Gateway should be associated with a WAF Web ACL",
+            "Checks": [
+                "api-gw-associated-with-waf"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-4(21)",
+                    "Category": "Protect > Protective services",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether an API Gateway stage uses an AWS WAF web access control list (ACL). This control fails if an AWS WAF web ACL is not attached to a REST API Gateway stage."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

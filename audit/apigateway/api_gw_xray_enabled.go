@@ -13,7 +13,7 @@ import (
 func CheckApiGwXrayEnabled(cfg aws.Config) string {
 	compliance, err := util.LoadComplianceData("compliance/aws_security_hub.json")
 	if err != nil {
-		log.Printf("└─[ERROR] Error loading compliance data: %v", err)
+		log.Printf("[ERROR] Error loading compliance data: %v", err)
 		return "NA"
 	}
 	util.PrintComplianceInfo(compliance, "APIGateway.3")
@@ -27,19 +27,19 @@ func CheckApiGwXrayEnabled(cfg aws.Config) string {
 	// Get all REST APIs
 	apis, err := client.GetRestApis(context.TODO(), &apigateway.GetRestApisInput{})
 	if err != nil {
-		log.Printf("└─[ERROR] Failed to get REST APIs: %v", err)
+		log.Printf("[ERROR] Failed to get REST APIs: %v", err)
 		return "NA"
 	}
 
 	if len(apis.Items) == 0 {
-		log.Println("└─[*] No REST APIs found")
+		log.Println("[*] No REST APIs found")
 		return "NA"
 	}
 
 	allEnabled := true
 
 	for _, api := range apis.Items {
-		log.Printf("└─[*] Checking API: %s", aws.ToString(api.Name))
+		log.Printf("[*] Checking API: %s", aws.ToString(api.Name))
 
 		// Get stages for each API
 		stages, err := client.GetStages(context.TODO(), &apigateway.GetStagesInput{
@@ -63,10 +63,10 @@ func CheckApiGwXrayEnabled(cfg aws.Config) string {
 	}
 
 	if allEnabled {
-		log.Println("└─[PASS] X-Ray tracing is enabled for all API Gateway REST API stages")
+		log.Println("[PASS] X-Ray tracing is enabled for all API Gateway REST API stages")
 		return "PASS"
 	} else {
-		log.Println("└─[FAIL] X-Ray tracing is not enabled for one or more API Gateway REST API stages")
+		log.Println("[FAIL] X-Ray tracing is not enabled for one or more API Gateway REST API stages")
 		return "FAIL"
 	}
 }

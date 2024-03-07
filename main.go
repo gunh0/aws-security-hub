@@ -88,6 +88,22 @@ var checkApiGwXrayEnabledCmd = &cobra.Command{
 	},
 }
 
+// APIGateway.4
+var checkApiGwAssociatedWithWafCmd = &cobra.Command{
+	Use:     "api-gw-associated-with-waf",
+	Short:   "API Gateway should be associated with a WAF Web ACL",
+	Aliases: []string{"apigateway.4"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := apigatewayChecker.CheckApiGwAssociatedWithWaf(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.4] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -217,6 +233,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)             // APIGateway.1
 	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                          // APIGateway.2
 	rootCmd.AddCommand(checkApiGwXrayEnabledCmd)                         // APIGateway.3
+	rootCmd.AddCommand(checkApiGwAssociatedWithWafCmd)                   // APIGateway.4
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
