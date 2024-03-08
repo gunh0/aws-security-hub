@@ -69,6 +69,22 @@
             ]
         },
         {
+            "Id": "APIGateway.5",
+            "Description": "API Gateway REST API cache data should be encrypted at rest",
+            "Checks": [
+                "api-gw-cache-encrypted"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 CA-9(1), NIST.800-53.r5 CM-3(6), NIST.800-53.r5 SC-13, NIST.800-53.r5 SC-28, NIST.800-53.r5 SC-28(1), NIST.800-53.r5 SC-7(10), NIST.800-53.r5 SI-7(6)",
+                    "Category": "Protect > Data protection > Encryption of data at rest",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether all methods in API Gateway REST API stages that have cache enabled are encrypted. The control fails if any method in an API Gateway REST API stage is configured to cache and the cache is not encrypted. Security Hub evaluates the encryption of a particular method only when caching is enabled for that method."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [
