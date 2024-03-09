@@ -15,6 +15,9 @@ This tool will provide comprehensive audit capabilities across the following AWS
   - [x] [APIGateway.1] API Gateway REST and WebSocket API execution logging should be enabled
   - [x] [APIGateway.2] API Gateway REST API stages should be configured to use SSL certificates for backend authentication
   - [x] [APIGateway.3] API Gateway REST API stages should have AWS X-Ray tracing enabled
+  - [x] [APIGateway.4] API Gateway should be associated with a WAF Web ACL
+  - [x] [APIGateway.5] API Gateway REST API cache data should be encrypted at rest
+  - [x] [APIGateway.8] API Gateway routes should specify an authorization type
 - **Security Hub controls for AWS AppSync**
 - **Security Hub controls for Athena**
 - **Security Hub controls for AWS Backup**

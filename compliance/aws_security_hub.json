@@ -85,6 +85,22 @@
             ]
         },
         {
+            "Id": "APIGateway.8",
+            "Description": "API Gateway routes should specify an authorization type",
+            "Checks": [
+                "api-gwv2-authorization-type-configured"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-3, NIST.800-53.r5 CM-2, NIST.800-53.r5 CM-2(2)",
+                    "Category": "Protect > Secure Access Management",
+                    "Severity": "Medium",
+                    "Description": "This control checks if Amazon API Gateway routes have an authorization type. The control fails if the API Gateway route doesn't have any authorization type. Optionally, you can provide a custom parameter value if you want the control to pass only if the route uses the authorization type specified in the authorizationType parameter."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

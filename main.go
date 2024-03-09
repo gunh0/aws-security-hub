@@ -120,6 +120,22 @@ var checkApiGwCacheEncryptedCmd = &cobra.Command{
 	},
 }
 
+// APIGateway.8
+var checkApiGwv2AuthorizationTypeConfiguredCmd = &cobra.Command{
+	Use:     "api-gwv2-authorization-type-configured",
+	Short:   "API Gateway routes should specify an authorization type",
+	Aliases: []string{"apigateway.8"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := apigatewayChecker.CheckApiGwv2AuthorizationTypeConfigured(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.8] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -251,6 +267,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwXrayEnabledCmd)                         // APIGateway.3
 	rootCmd.AddCommand(checkApiGwAssociatedWithWafCmd)                   // APIGateway.4
 	rootCmd.AddCommand(checkApiGwCacheEncryptedCmd)                      // APIGateway.5
+	rootCmd.AddCommand(checkApiGwv2AuthorizationTypeConfiguredCmd)       // APIGateway.8
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
