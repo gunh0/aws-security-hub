@@ -136,6 +136,22 @@ var checkApiGwv2AuthorizationTypeConfiguredCmd = &cobra.Command{
 	},
 }
 
+// APIGateway.9
+var checkApiGwv2AccessLogsEnabledCmd = &cobra.Command{
+	Use:     "api-gwv2-access-logs-enabled",
+	Short:   "Access logging should be configured for API Gateway V2 Stages",
+	Aliases: []string{"apigateway.9"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := apigatewayChecker.CheckApiGwv2AccessLogsEnabled(client.Config)
+		// Print Result
+		log.Printf("[APIGateway.9] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -268,6 +284,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwAssociatedWithWafCmd)                   // APIGateway.4
 	rootCmd.AddCommand(checkApiGwCacheEncryptedCmd)                      // APIGateway.5
 	rootCmd.AddCommand(checkApiGwv2AuthorizationTypeConfiguredCmd)       // APIGateway.8
+	rootCmd.AddCommand(checkApiGwv2AccessLogsEnabledCmd)                 // APIGateway.9
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3

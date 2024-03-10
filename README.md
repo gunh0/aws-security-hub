@@ -18,6 +18,7 @@ This tool will provide comprehensive audit capabilities across the following AWS
   - [x] [APIGateway.4] API Gateway should be associated with a WAF Web ACL
   - [x] [APIGateway.5] API Gateway REST API cache data should be encrypted at rest
   - [x] [APIGateway.8] API Gateway routes should specify an authorization type
+  - [x] [APIGateway.9] Access logging should be configured for API Gateway V2 Stages
 - **Security Hub controls for AWS AppSync**
 - **Security Hub controls for Athena**
 - **Security Hub controls for AWS Backup**

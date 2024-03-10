@@ -101,6 +101,22 @@
             ]
         },
         {
+            "Id": "APIGateway.9",
+            "Description": "Access logging should be configured for API Gateway V2 Stages",
+            "Checks": [
+                "api-gwv2-access-logs-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon API Gateway controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-4(26), NIST.800-53.r5 AU-10, NIST.800-53.r5 AU-12, NIST.800-53.r5 AU-2, NIST.800-53.r5 AU-3, NIST.800-53.r5 AU-6(3), NIST.800-53.r5 AU-6(4), NIST.800-53.r5 CA-7, NIST.800-53.r5 SC-7(9), NIST.800-53.r5 SI-7(8)",
+                    "Category": "Identify > Logging",
+                    "Severity": "Medium",
+                    "Description": "This control checks if Amazon API Gateway V2 stages have access logging configured. This control fails if access log settings aren't defined."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [
