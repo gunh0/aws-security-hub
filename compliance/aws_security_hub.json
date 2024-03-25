@@ -117,6 +117,22 @@
             ]
         },
         {
+            "Id": "CloudFront.1",
+            "Description": "CloudFront distributions should have a default root object configured",
+            "Checks": [
+                "cloudfront-default-root-object-configured"
+            ],
+            "Attributes":[
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "NIST.800-53.r5 SC-7(11), NIST.800-53.r5 SC-7(16)",
+                    "Category": "Protect > Secure access management > Resources not publicly accessible",
+                    "Severity": "High",
+                    "Description":"This control checks whether an Amazon CloudFront distribution is configured to return a specific object that is the default root object. The control fails if the CloudFront distribution does not have a default root object configured."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

@@ -7,6 +7,7 @@ import (
 	"os"
 
 	apigatewayChecker "aws-security-hub/audit/apigateway"
+	cloudfrontChecker "aws-security-hub/audit/cloudfront"
 	documentdbChecker "aws-security-hub/audit/documentdb"
 	ec2Checker "aws-security-hub/audit/ec2"
 	s3Checker "aws-security-hub/audit/s3"
@@ -152,6 +153,22 @@ var checkApiGwv2AccessLogsEnabledCmd = &cobra.Command{
 	},
 }
 
+// CloudFront.1
+var checkCloudfrontDefaultRootObjectConfiguredCmd = &cobra.Command{
+	Use:     "cloudfront-default-root-object-configured",
+	Short:   "CloudFront distributions should have a default root object configured",
+	Aliases: []string{"cloudfront.1"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := cloudfrontChecker.CheckCloudfrontDefaultRootObjectConfigured(client.Config)
+		// Print Result
+		log.Printf("[CloudFront.1] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -285,6 +302,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwCacheEncryptedCmd)                      // APIGateway.5
 	rootCmd.AddCommand(checkApiGwv2AuthorizationTypeConfiguredCmd)       // APIGateway.8
 	rootCmd.AddCommand(checkApiGwv2AccessLogsEnabledCmd)                 // APIGateway.9
+	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
