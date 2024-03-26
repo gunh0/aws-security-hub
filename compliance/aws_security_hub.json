@@ -122,13 +122,29 @@
             "Checks": [
                 "cloudfront-default-root-object-configured"
             ],
-            "Attributes":[
+            "Attributes": [
                 {
                     "Section": "Amazon CloudFront controls",
                     "RelatedRequirements": "NIST.800-53.r5 SC-7(11), NIST.800-53.r5 SC-7(16)",
                     "Category": "Protect > Secure access management > Resources not publicly accessible",
                     "Severity": "High",
-                    "Description":"This control checks whether an Amazon CloudFront distribution is configured to return a specific object that is the default root object. The control fails if the CloudFront distribution does not have a default root object configured."
+                    "Description": "This control checks whether an Amazon CloudFront distribution is configured to return a specific object that is the default root object. The control fails if the CloudFront distribution does not have a default root object configured."
+                }
+            ]
+        },
+        {
+            "Id": "CloudFront.3",
+            "Description": "CloudFront distributions should require encryption in transit",
+            "Checks": [
+                "cloudfront-viewer-policy-https"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-17(2), NIST.800-53.r5 AC-4, NIST.800-53.r5 IA-5(1), NIST.800-53.r5 SC-12(3), NIST.800-53.r5 SC-13, NIST.800-53.r5 SC-23, NIST.800-53.r5 SC-23(3), NIST.800-53.r5 SC-7(4), NIST.800-53.r5 SC-8, NIST.800-53.r5 SC-8(1), NIST.800-53.r5 SC-8(2), NIST.800-53.r5 SI-7(6)",
+                    "Category": "Protect > Data Protection > Encryption of data-in-transit",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether an Amazon CloudFront distribution requires viewers to use HTTPS directly or whether it uses redirection. The control fails if ViewerProtocolPolicy is set to allow-all for defaultCacheBehavior or for cacheBehaviors."
                 }
             ]
         },

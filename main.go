@@ -169,6 +169,22 @@ var checkCloudfrontDefaultRootObjectConfiguredCmd = &cobra.Command{
 	},
 }
 
+// CloudFront.3
+var checkCloudfrontViewerPolicyHttpsCmd = &cobra.Command{
+	Use:     "cloudfront-viewer-policy-https",
+	Short:   "CloudFront distributions should require encryption in transit",
+	Aliases: []string{"cloudfront.3"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := cloudfrontChecker.CheckCloudfrontViewerPolicyHttps(client.Config)
+		// Print Result
+		log.Printf("[CloudFront.3] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -303,6 +319,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwv2AuthorizationTypeConfiguredCmd)       // APIGateway.8
 	rootCmd.AddCommand(checkApiGwv2AccessLogsEnabledCmd)                 // APIGateway.9
 	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1
+	rootCmd.AddCommand(checkCloudfrontViewerPolicyHttpsCmd)              // CloudFront.3
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
