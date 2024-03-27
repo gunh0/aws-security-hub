@@ -149,6 +149,22 @@
             ]
         },
         {
+            "Id": "CloudFront.4",
+            "Description": "CloudFront distributions should have origin failover configured",
+            "Checks": [
+                "cloudfront-origin-failover-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "NIST.800-53.r5 CP-10, NIST.800-53.r5 SC-36, NIST.800-53.r5 SC-5(2), NIST.800-53.r5 SI-13(5)",
+                    "Category": "Recover > Resilience > High availability",
+                    "Severity": "Low",
+                    "Description": "This control checks whether an Amazon CloudFront distribution is configured with an origin group that has two or more origins."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

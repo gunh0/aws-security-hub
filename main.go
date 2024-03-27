@@ -185,6 +185,22 @@ var checkCloudfrontViewerPolicyHttpsCmd = &cobra.Command{
 	},
 }
 
+// CloudFront.4
+var checkCloudfrontOriginFailoverEnabledCmd = &cobra.Command{
+	Use:     "cloudfront-origin-failover-enabled",
+	Short:   "CloudFront distributions should have origin failover enabled",
+	Aliases: []string{"cloudfront.4"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := cloudfrontChecker.CheckCloudfrontOriginFailoverEnabled(client.Config)
+		// Print Result
+		log.Printf("[CloudFront.4] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -320,6 +336,7 @@ func init() {
 	rootCmd.AddCommand(checkApiGwv2AccessLogsEnabledCmd)                 // APIGateway.9
 	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1
 	rootCmd.AddCommand(checkCloudfrontViewerPolicyHttpsCmd)              // CloudFront.3
+	rootCmd.AddCommand(checkCloudfrontOriginFailoverEnabledCmd)          // CloudFront.4
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
