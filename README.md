@@ -27,8 +27,8 @@ This tool will provide comprehensive audit capabilities across the following AWS
 - **Amazon CloudFront controls**
   - [x] [CloudFront.1] CloudFront distributions should have a default root object configured
   - [x] [CloudFront.3] CloudFront distributions should require encryption in transit
-  - [ ] [CloudFront.4] CloudFront distributions should have origin failover configured
-  - [ ] [CloudFront.5] CloudFront distributions should have logging enabled
+  - [x] [CloudFront.4] CloudFront distributions should have origin failover configured
+  - [x] [CloudFront.5] CloudFront distributions should have logging enabled
   - [ ] [CloudFront.6] CloudFront distributions should have WAF enabled
   - [ ] [CloudFront.7] CloudFront distributions should use custom SSL/TLS certificates
   - [ ] [CloudFront.8] CloudFront distributions should use SNI to serve HTTPS requests

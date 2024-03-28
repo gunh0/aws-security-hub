@@ -165,6 +165,22 @@
             ]
         },
         {
+            "Id": "CloudFront.5",
+            "Description": "CloudFront distributions should have logging enabled",
+            "Checks": [
+                "cloudfront-accesslogs-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "NIST.800-53.r5 AC-2(4), NIST.800-53.r5 AC-4(26), NIST.800-53.r5 AC-6(9), NIST.800-53.r5 AU-10, NIST.800-53.r5 AU-12, NIST.800-53.r5 AU-2, NIST.800-53.r5 AU-3, NIST.800-53.r5 AU-6(3), NIST.800-53.r5 AU-6(4), NIST.800-53.r5 CA-7, NIST.800-53.r5 SC-7(9), NIST.800-53.r5 SI-3(8), NIST.800-53.r5 SI-4(20), NIST.800-53.r5 SI-7(8)",
+                    "Category": "Identify > Logging",
+                    "Severity": "Medium",
+                    "Description": "This control checks whether server access logging is enabled on CloudFront distributions. The control fails if access logging is not enabled for a distribution."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

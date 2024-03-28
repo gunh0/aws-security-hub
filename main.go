@@ -201,6 +201,22 @@ var checkCloudfrontOriginFailoverEnabledCmd = &cobra.Command{
 	},
 }
 
+// CloudFront.5
+var checkCloudfrontAccesslogsEnabledCmd = &cobra.Command{
+	Use:     "cloudfront-accesslogs-enabled",
+	Short:   "CloudFront distributions should have access logging enabled",
+	Aliases: []string{"cloudfront.5"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := cloudfrontChecker.CheckCloudfrontAccesslogsEnabled(client.Config)
+		// Print Result
+		log.Printf("[CloudFront.5] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -337,6 +353,7 @@ func init() {
 	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1
 	rootCmd.AddCommand(checkCloudfrontViewerPolicyHttpsCmd)              // CloudFront.3
 	rootCmd.AddCommand(checkCloudfrontOriginFailoverEnabledCmd)          // CloudFront.4
+	rootCmd.AddCommand(checkCloudfrontAccesslogsEnabledCmd)              // CloudFront.5
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3
