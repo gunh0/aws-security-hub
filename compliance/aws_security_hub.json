@@ -181,6 +181,22 @@
             ]
         },
         {
+            "Id": "CloudFront.12",
+            "Description": "CloudFront distributions should not point to non-existent S3 origins",
+            "Checks": [
+                "cloudfront-s3-origin-non-existent-bucket"
+            ],
+            "Attributes":[
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "NIST.800-53.r5 CM-2, NIST.800-53.r5 CM-2(2)",
+                    "Category": "Identify > Resource configuration",
+                    "Severity": "High",
+                    "Description": "This control checks whether Amazon CloudFront distributions are pointing to non-existent Amazon S3 origins. The control fails for a CloudFront distribution if the origin is configured to point to a non-existent bucket. This control only applies to CloudFront distributions where an S3 bucket without static website hosting is the S3 origin."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [

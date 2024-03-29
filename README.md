@@ -34,7 +34,7 @@ This tool will provide comprehensive audit capabilities across the following AWS
   - [ ] [CloudFront.8] CloudFront distributions should use SNI to serve HTTPS requests
   - [ ] [CloudFront.9] CloudFront distributions should encrypt traffic to custom origins
   - [ ] [CloudFront.10] CloudFront distributions should not use deprecated SSL protocols between edge locations and custom origins
-  - [ ] [CloudFront.12] CloudFront distributions should not point to non-existent S3 origins
+  - [x] [CloudFront.12] CloudFront distributions should not point to non-existent S3 origins
   - [ ] [CloudFront.13] CloudFront distributions should use origin access control
   - [ ] [CloudFront.14] CloudFront distributions should be tagged
 - **Security Hub controls for CloudTrail**
