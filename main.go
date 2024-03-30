@@ -233,6 +233,22 @@ var checkCloudfrontS3OriginNonExistentBucketCmd = &cobra.Command{
 	},
 }
 
+// CloudFront.13
+var checkCloudfrontS3OriginAccessControlEnabledCmd = &cobra.Command{
+	Use:     "cloudfront-s3-origin-access-control-enabled",
+	Short:   "CloudFront distributions should use origin access control",
+	Aliases: []string{"cloudfront.13"},
+	Run: func(cmd *cobra.Command, args []string) {
+		client, err := initAWSClient()
+		if err != nil {
+			log.Fatalf("Failed to initialize AWS client: %v", err)
+		}
+		result := cloudfrontChecker.CheckCloudfrontS3OriginAccessControlEnabled(client.Config)
+		// Print Result
+		log.Printf("[CloudFront.13] %s", result)
+	},
+}
+
 // DocumentDB.1
 var checkDocdbClusterEncryptedCmd = &cobra.Command{
 	Use:     "docdb-cluster-encrypted",
@@ -371,6 +387,7 @@ func init() {
 	rootCmd.AddCommand(checkCloudfrontOriginFailoverEnabledCmd)          // CloudFront.4
 	rootCmd.AddCommand(checkCloudfrontAccesslogsEnabledCmd)              // CloudFront.5
 	rootCmd.AddCommand(checkCloudfrontS3OriginNonExistentBucketCmd)      // CloudFront.12
+	rootCmd.AddCommand(checkCloudfrontS3OriginAccessControlEnabledCmd)   // CloudFront.13
 	rootCmd.AddCommand(checkDocdbClusterEncryptedCmd)                    // DocumentDB.1
 	rootCmd.AddCommand(checkDocdbClusterBackupRetentionCheckCmd)         // DocumentDB.2
 	rootCmd.AddCommand(checkDocdbClusterSnapshotPublicProhibitedCmd)     // DocumentDB.3

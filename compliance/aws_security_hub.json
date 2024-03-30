@@ -186,13 +186,28 @@
             "Checks": [
                 "cloudfront-s3-origin-non-existent-bucket"
             ],
-            "Attributes":[
+            "Attributes": [
                 {
                     "Section": "Amazon CloudFront controls",
                     "RelatedRequirements": "NIST.800-53.r5 CM-2, NIST.800-53.r5 CM-2(2)",
                     "Category": "Identify > Resource configuration",
                     "Severity": "High",
                     "Description": "This control checks whether Amazon CloudFront distributions are pointing to non-existent Amazon S3 origins. The control fails for a CloudFront distribution if the origin is configured to point to a non-existent bucket. This control only applies to CloudFront distributions where an S3 bucket without static website hosting is the S3 origin."
+                }
+            ]
+        },
+        {
+            "Id": "CloudFront.13",
+            "Description": "CloudFront distributions should use origin access control",
+            "Checks": [
+                "cloudfront-s3-origin-access-control-enabled"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "",
+                    "Category": "Protect > Secure access management > Resource not publicly accessible",
+                    "Description": "This control checks whether an Amazon CloudFront distribution with an Amazon S3 origin has origin access control (OAC) configured. The control fails if OAC isn't configured for the CloudFront distribution."
                 }
             ]
         },
