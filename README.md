@@ -36,7 +36,7 @@ This tool will provide comprehensive audit capabilities across the following AWS
   - [ ] [CloudFront.10] CloudFront distributions should not use deprecated SSL protocols between edge locations and custom origins
   - [x] [CloudFront.12] CloudFront distributions should not point to non-existent S3 origins
   - [x] [CloudFront.13] CloudFront distributions should use origin access control
-  - [ ] [CloudFront.14] CloudFront distributions should be tagged
+  - [x] [CloudFront.14] CloudFront distributions should be tagged
 - **Security Hub controls for CloudTrail**
 - **Security Hub controls for CloudWatch**
 - **Security Hub controls for CodeArtifact**

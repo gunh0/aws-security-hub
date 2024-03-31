@@ -212,6 +212,22 @@
             ]
         },
         {
+            "Id": "CloudFront.14",
+            "Description": "CloudFront distributions should be tagged",
+            "Checks": [
+                "tagged-cloudfront-distribution"
+            ],
+            "Attributes": [
+                {
+                    "Section": "Amazon CloudFront controls",
+                    "RelatedRequirements": "",
+                    "Category": "Identify > Inventory > Tagging",
+                    "Severity": "Low",
+                    "Description": "This control checks whether an Amazon CloudFront distribution has tags with the specific keys defined in the parameter requiredTagKeys. The control fails if the distribution doesn’t have any tag keys or if it doesn’t have all the keys specified in the parameter requiredTagKeys. If the parameter requiredTagKeys isn't provided, the control only checks for the existence of a tag key and fails if the distribution isn't tagged with any key. System tags, which are automatically applied and begin with aws:, are ignored."
+                }
+            ]
+        },
+        {
             "Id": "DocumentDB.1",
             "Description": "Amazon DocumentDB clusters should have encryption at rest enabled",
             "Checks": [
