@@ -6,26 +6,20 @@ import (
 	"log"
 	"os"
 
-	apigatewayChecker "aws-security-hub/audit/apigateway"
+	apigateway "aws-security-hub/audit/apigateway"
 	cloudfrontChecker "aws-security-hub/audit/cloudfront"
 	documentdbChecker "aws-security-hub/audit/documentdb"
 	ec2Checker "aws-security-hub/audit/ec2"
 	s3Checker "aws-security-hub/audit/s3"
+	"aws-security-hub/types"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-// AWSClient wraps the AWS SDK config
-type AWSClient struct {
-	Config aws.Config
-}
-
-// initAWSClient initializes a universal AWS client
-func initAWSClient() (*AWSClient, error) {
+func initAWSClient() (*types.AWSClient, error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
 		config.WithRegion(viper.GetString("aws_region")),
 	)
@@ -33,124 +27,12 @@ func initAWSClient() (*AWSClient, error) {
 		return nil, fmt.Errorf("unable to load SDK config: %v", err)
 	}
 
-	return &AWSClient{Config: cfg}, nil
+	return &types.AWSClient{Config: cfg}, nil
 }
 
 var rootCmd = &cobra.Command{
 	Use:   "audit",
 	Short: "Audit your AWS resources",
-}
-
-// APIGateway.1
-var checkApiGwExecutionLoggingEnabledCmd = &cobra.Command{
-	Use:     "api-gw-execution-logging-enabled",
-	Short:   "API Gateway REST and WebSocket API execution logging should be enabled",
-	Aliases: []string{"apigateway.1"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwExecutionLoggingEnabled(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.1] %s", result)
-	},
-}
-
-// APIGateway.2
-var checkApiGwSslEnabledCmd = &cobra.Command{
-	Use:     "api-gw-ssl-enabled",
-	Short:   "API Gateway REST API stages should be configured to use SSL certificates for backend authentication",
-	Aliases: []string{"apigateway.2"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwSslEnabled(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.2] %s", result)
-	},
-}
-
-// APIGateway.3
-var checkApiGwXrayEnabledCmd = &cobra.Command{
-	Use:     "api-gw-xray-enabled",
-	Short:   "API Gateway REST API stages should have AWS X-Ray tracing enabled",
-	Aliases: []string{"apigateway.3"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwXrayEnabled(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.3] %s", result)
-	},
-}
-
-// APIGateway.4
-var checkApiGwAssociatedWithWafCmd = &cobra.Command{
-	Use:     "api-gw-associated-with-waf",
-	Short:   "API Gateway should be associated with a WAF Web ACL",
-	Aliases: []string{"apigateway.4"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwAssociatedWithWaf(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.4] %s", result)
-	},
-}
-
-// APIGateway.5
-var checkApiGwCacheEncryptedCmd = &cobra.Command{
-	Use:     "api-gw-cache-encrypted",
-	Short:   "API Gateway REST API cache data should be encrypted at rest",
-	Aliases: []string{"apigateway.5"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwCacheEncrypted(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.5] %s", result)
-	},
-}
-
-// APIGateway.8
-var checkApiGwv2AuthorizationTypeConfiguredCmd = &cobra.Command{
-	Use:     "api-gwv2-authorization-type-configured",
-	Short:   "API Gateway routes should specify an authorization type",
-	Aliases: []string{"apigateway.8"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwv2AuthorizationTypeConfigured(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.8] %s", result)
-	},
-}
-
-// APIGateway.9
-var checkApiGwv2AccessLogsEnabledCmd = &cobra.Command{
-	Use:     "api-gwv2-access-logs-enabled",
-	Short:   "Access logging should be configured for API Gateway V2 Stages",
-	Aliases: []string{"apigateway.9"},
-	Run: func(cmd *cobra.Command, args []string) {
-		client, err := initAWSClient()
-		if err != nil {
-			log.Fatalf("Failed to initialize AWS client: %v", err)
-		}
-		result := apigatewayChecker.CheckApiGwv2AccessLogsEnabled(client.Config)
-		// Print Result
-		log.Printf("[APIGateway.9] %s", result)
-	},
 }
 
 // CloudFront.1
@@ -391,14 +273,10 @@ func init() {
 		fmt.Printf("[*] No config file found, using environment variables.\n")
 	}
 
-	// Add all commands to root command
-	rootCmd.AddCommand(checkApiGwExecutionLoggingEnabledCmd)             // APIGateway.1
-	rootCmd.AddCommand(checkApiGwSslEnabledCmd)                          // APIGateway.2
-	rootCmd.AddCommand(checkApiGwXrayEnabledCmd)                         // APIGateway.3
-	rootCmd.AddCommand(checkApiGwAssociatedWithWafCmd)                   // APIGateway.4
-	rootCmd.AddCommand(checkApiGwCacheEncryptedCmd)                      // APIGateway.5
-	rootCmd.AddCommand(checkApiGwv2AuthorizationTypeConfiguredCmd)       // APIGateway.8
-	rootCmd.AddCommand(checkApiGwv2AccessLogsEnabledCmd)                 // APIGateway.9
+	// Amazon API Gateway controls
+	for _, cmd := range apigateway.GetCommands(initAWSClient) {
+		rootCmd.AddCommand(cmd)
+	}
 	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1
 	rootCmd.AddCommand(checkCloudfrontViewerPolicyHttpsCmd)              // CloudFront.3
 	rootCmd.AddCommand(checkCloudfrontOriginFailoverEnabledCmd)          // CloudFront.4
