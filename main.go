@@ -6,7 +6,8 @@ import (
 	"log"
 	"os"
 
-	apigateway "aws-security-hub/audit/apigateway"
+	accountAudit "aws-security-hub/audit/account"
+	apigatewayAudit "aws-security-hub/audit/apigateway"
 	cloudfrontChecker "aws-security-hub/audit/cloudfront"
 	documentdbChecker "aws-security-hub/audit/documentdb"
 	ec2Checker "aws-security-hub/audit/ec2"
@@ -273,8 +274,12 @@ func init() {
 		fmt.Printf("[*] No config file found, using environment variables.\n")
 	}
 
+	// Amazon account controls
+	for _, cmd := range accountAudit.GetCommands(initAWSClient) {
+		rootCmd.AddCommand(cmd)
+	}
 	// Amazon API Gateway controls
-	for _, cmd := range apigateway.GetCommands(initAWSClient) {
+	for _, cmd := range apigatewayAudit.GetCommands(initAWSClient) {
 		rootCmd.AddCommand(cmd)
 	}
 	rootCmd.AddCommand(checkCloudfrontDefaultRootObjectConfiguredCmd)    // CloudFront.1

@@ -10,7 +10,9 @@ The ultimate goal is to implement all controls as specified in the [AWS Security
 
 This tool will provide comprehensive audit capabilities across the following AWS services and security controls:
 
-- **Security Hub controls for AWS accounts**
+- **AWS account controls**
+  - [x] [Account.1] Security contact information should be provided for an AWS account
+  - [ ] [Account.2] AWS accounts should be part of an AWS Organizations organization
 - **Amazon API Gateway controls**
   - [x] [APIGateway.1] API Gateway REST and WebSocket API execution logging should be enabled
   - [x] [APIGateway.2] API Gateway REST API stages should be configured to use SSL certificates for backend authentication
